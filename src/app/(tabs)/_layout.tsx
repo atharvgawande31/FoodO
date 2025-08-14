@@ -2,7 +2,7 @@ import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
-import ModalScreen from '../modal';
+
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from 'react-native';
@@ -29,12 +29,12 @@ export default function TabLayout() {
 
       <Tabs.Screen  name="index" options={{href: null}}/>
       <Tabs.Screen
-        name="menu"
+        name="modal"
         options={{
           title: 'Menu',
           tabBarIcon: ({ color }) => <TabBarIcon name="cutlery" color={color} />,
           headerRight: () => (
-            <Link href="/modal" asChild>
+            <Link href="/cart" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
@@ -50,9 +50,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="menu"
         options={{
-          title: 'Profile',
+          title: 'Menu',
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
         }}
       />
