@@ -5,15 +5,16 @@ import { Image } from "react-native";
 import Colors from "../constants/Colors";
 import { Link } from "expo-router";
 
+export const defaultImage = "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/food/default.png"
+
 export const ProductList = ({ product }: { product: Product }) => (
+    
     <Link href={`/menu/${product.id}`} asChild>
         <Pressable style={styles.container}>
             <Image
                 source={{
                     uri:
-                        product.image ||
-                        "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/food/default.png",
-
+                        product.image || defaultImage
                 }}
                 resizeMode="contain"
                 style={styles.image}
