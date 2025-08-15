@@ -1,11 +1,29 @@
-import { useEffect, createContext } from "react";
+import { useEffect, createContext, useContext, useState } from "react";
+import { CartItem, Product } from "@assets/types";
 
-export const CardContext = createContext({});
+
+   const [items, setItems] = useState<CartItem[]>([]) 
+
+      type CardType = {
+    items: CartItem,
+    addItem : (product: Product, size: CartItem['size']) => void
+    }
+
+    const CardContext = createContext<CardType>({
+        items: [],
+        addItem: () => {}
+    });
+
 
 export const CardProvider = ({ children }: any) => {
+
+const addItem = (product: Product, size: CartItem['size']) => {
+
+} 
   return (
-    <CardContext.Provider value={{ items: [], onAddItems: () => {} }}>
+    <CardContext.Provider value={{ items , addItem }}>
       {children}
     </CardContext.Provider>
   );
 };
+export const useCart = () => useContext(CardContext);
