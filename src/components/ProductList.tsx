@@ -1,4 +1,4 @@
-import { Product } from "@/types";
+import { Product } from "@assets/types";
 import { View, Text} from "./Themed";
 import { StyleSheet, Pressable } from "react-native";
 import { Image } from "react-native";
