@@ -9,7 +9,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
-import { CardProvider } from "./providers/Providers";
+import { CartProvider } from "./providers/Providers";
 import { useColorScheme } from "../components/useColorScheme.web";
 
 export {
@@ -54,12 +54,12 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <CardProvider>
+      <CartProvider>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="cart" options={{ presentation: "modal" }} />
         </Stack>
-      </CardProvider>
+      </CartProvider>
     </ThemeProvider>
   );
 }

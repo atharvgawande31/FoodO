@@ -5,8 +5,9 @@ import { useContext } from "react";
 import { useCart } from "./providers/Providers"
 
 
-export default function cart() {
+export default function Cart() {
   const  {items}  = useCart()
+  if (items.length === 0) return null;
 
   return (
     <View>

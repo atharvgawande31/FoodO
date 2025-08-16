@@ -1,24 +1,39 @@
-import { useEffect, createContext, useContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { CartItem, Product } from "@assets/types";
 
-const [items, setItems] = useState<CartItem[]>([]);
-
-type CardType = {
+// Define the type for the cart context
+type CartType = {
   items: CartItem[];
   addItem: (product: Product, size: CartItem["size"]) => void;
 };
 
-const CardContext = createContext<CardType>({
+// Create context with default values
+const CartContext = createContext<CartType>({
   items: [],
   addItem: () => {},
 });
 
-export const CardProvider = ({ children }: any) => {
-  const addItem = (product: Product, size: CartItem["size"]) => {};
+// Provider component
+export const CartProvider = ({ children }: { children: React.ReactNode }) => {
+  const [items, setItems] = useState<CartItem[]>([]);
+
+  const addItem = (product: Product, size: CartItem["size"]) => {
+    const newCartItem: CartItem = {
+      id: String(items.length + 1), // unique id
+      product_id: product.id,
+      size,
+      product,
+      quantity: 1,
+    };
+    setItems([...items, newCartItem]);
+  };
+
   return (
-    <CardContext.Provider value={{ items, addItem }}>
+    <CartContext.Provider value={{ items, addItem }}>
       {children}
-    </CardContext.Provider>
+    </CartContext.Provider>
   );
 };
-export const useCart = () => useContext(CardContext);
+
+// Hook to use cart anywhere
+export const useCart = () => useContext(CartContext);
