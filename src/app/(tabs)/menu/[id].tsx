@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import React from "react";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import products from "@assets/data/products";
 import { defaultImage } from "@/components/ProductList";
 import Colors from "@/constants/Colors";
@@ -24,6 +24,7 @@ export default function ProductPage() {
       return;
     }
     addItem(product, selectedSize);
+    router.push("/cart")
   };
 
   if (!product) {
@@ -65,7 +66,7 @@ export default function ProductPage() {
         ))}
       </View>
       <Text style={styles.price}>${product.price}</Text>
-      <Button text="Add to Cart" onPress={addToCart}>
+      <Button  text="Add to Cart" onPress={addToCart}>
         Add to cart
       </Button>
     </View>
