@@ -4,12 +4,15 @@ import Button from "@/components/Button";
 import { defaultImage } from "@/components/ProductList";
 import * as ImagePicker from "expo-image-picker";
 import Colors from "@/constants/Colors";
+import { Stack, useLocalSearchParams } from "expo-router";
 
 export default function ProductForm() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [errors, setErrors] = useState<{ name?: string; price?: string }>({});
   const [image, setImage] = useState<string | null>(null);
+
+  //Input Validation
 
   const validateForm = () => {
     if (!price) {
@@ -27,19 +30,27 @@ export default function ProductForm() {
     return true;
   };
 
+  //Form Submission
+
+  const { id } = useLocalSearchParams();
+  const updatingItem = !!id;
+
   function handleForm() {
     setErrors({});
+    if (updatingItem) {
+      Alert.alert("Update", "Product updated successfully");
+      return;
+    }
     if (!validateForm()) {
       Alert.alert("Validation failed", "Please fix the errors in the form");
       return;
     }
-
-    // Handle form submission
     Alert.alert("Success", "Product created successfully");
   }
 
+  //Image Picker
+
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images", "videos"],
       allowsEditing: true,
@@ -54,8 +65,30 @@ export default function ProductForm() {
     }
   };
 
+  //Delete Item
+
+  function deleteItem() {
+    Alert.alert("Delete", "Are you sure you want to delete this item?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => {
+          // Handle delete logic here
+          Alert.alert("Deleted", "Product deleted successfully");
+        },
+      },
+    ]);
+  }
+
   return (
     <View style={styles.container}>
+      <Stack.Screen
+        options={{ title: updatingItem ? "Update Pizza" : "Create Pizza" }}
+      />
       <Image
         style={styles.image}
         source={{ uri: image || defaultImage }}
@@ -92,11 +125,18 @@ export default function ProductForm() {
         <Text style={{ color: "red" }}>{errors.price}</Text>
       ) : null}
 
-      <Button onPress={handleForm} text="Create"></Button>
+      <Button
+        onPress={handleForm}
+        text={updatingItem ? "Update" : "Create"}
+      ></Button>
+      {updatingItem ? (
+        <Text style={styles.delete} onPress={deleteItem}>
+          Delete
+        </Text>
+      ) : null}
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -146,5 +186,12 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
     elevation: 2,
+  },
+  delete: {
+    color: "red",
+    fontSize: 16,
+    fontWeight: "600",
+    textAlign: "center",
+    marginTop: 10,
   },
 });
