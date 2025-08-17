@@ -2,45 +2,68 @@ import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, Alert, Image } from "react-native";
 import Button from "@/components/Button";
 import { defaultImage } from "@/components/ProductList";
+import * as ImagePicker from "expo-image-picker";
+import Colors from "@/constants/Colors";
 
 export default function ProductForm() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [errors, setErrors] = useState<{ name?: string; price?: string }>({});
+  const [image, setImage] = useState<string | null>(null);
 
-
-const validateForm = () => {
-    if(!price) {
-        setErrors({price: 'Please enter a price'});
-        return false;
+  const validateForm = () => {
+    if (!price) {
+      setErrors({ price: "Please enter a price" });
+      return false;
     }
-    if(!name) {
-        setErrors({name: "Name required"})
-        return false;
+    if (!name) {
+      setErrors({ name: "Name required" });
+      return false;
     }
-    if(isNaN(parseFloat(price))) {
-        setErrors({price: 'price must be a number'})
-        return false;
+    if (isNaN(parseFloat(price || ""))) {
+      setErrors({ price: "price must be a number" });
+      return false;
     }
     return true;
-}
+  };
 
-function handleForm() {
+  function handleForm() {
+    setErrors({});
     if (!validateForm()) {
-        Alert.alert("Validation failed", "Please fix the errors in the form");
-        return
-    } 
+      Alert.alert("Validation failed", "Please fix the errors in the form");
+      return;
+    }
 
     // Handle form submission
     Alert.alert("Success", "Product created successfully");
-}
-  
+  }
 
-  
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images", "videos"],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
   return (
     <View style={styles.container}>
+      <Image
+        style={styles.image}
+        source={{ uri: image || defaultImage }}
+      ></Image>
+      <Text onPress={pickImage} style={styles.selectImage}>
+        Select Image
+      </Text>
 
-        <Image style={styles.image} source={{uri: defaultImage}}></Image>
       {/* Name */}
       <View style={styles.inputWrapper}>
         <Text style={styles.label}>Name</Text>
@@ -65,7 +88,9 @@ function handleForm() {
       </View>
 
       {errors.name ? <Text style={{ color: "red" }}>{errors.name}</Text> : null}
-      {errors.price ? <Text style={{ color: "red" }}>{errors.price}</Text> : null}
+      {errors.price ? (
+        <Text style={{ color: "red" }}>{errors.price}</Text>
+      ) : null}
 
       <Button onPress={handleForm} text="Create"></Button>
     </View>
@@ -79,12 +104,24 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#f9fafb",
   },
-  image:{
+  labelText: {
+    fontSize: 16,
+    marginBottom: 10,
+    color: "black",
+  },
+
+  selectImage: {
+    alignSelf: "center",
+    fontSize: 16,
+    fontWeight: "600",
+    color: Colors.light.tint,
+    marginBottom: 8,
+  },
+  image: {
     width: 300,
     aspectRatio: 1,
-    resizeMode: 'cover',
-    alignSelf: 'center'
-
+    resizeMode: "cover",
+    alignSelf: "center",
   },
   inputWrapper: {
     marginBottom: 18,
