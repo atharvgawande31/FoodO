@@ -1,4 +1,4 @@
-import { Order } from '@assets/types';
+import { Order } from '@/types';
 import products from './products';
 import dayjs from 'dayjs'
 const now = dayjs();

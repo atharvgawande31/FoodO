@@ -7,7 +7,7 @@ import Colors from "@/constants/Colors";
 import { useState } from "react";
 import Button from "@/components/Button";
 import { useCart } from "@/app/providers/Providers";
-import { PizzaSize } from "@assets/types";
+import { PizzaSize } from "@/types";
 
 
 

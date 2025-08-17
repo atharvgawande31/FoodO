@@ -30,7 +30,7 @@ function Cart() {
         renderItem={({ item }) => <CartListItem cartItem={item} />}
       ></FlatList>
       <View style={styles.checkout}>
-        <Text style={styles.totalPrice}>Total Price: {total}</Text>
+        <Text style={styles.totalPrice}>Total Price: ${total}</Text>
         <Button  text={"Checkout"}></Button>
       </View>
 
