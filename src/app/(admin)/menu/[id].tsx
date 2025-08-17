@@ -3,9 +3,9 @@ import React from "react";
 import { router, Stack, useLocalSearchParams, Link } from "expo-router";
 import products from "@assets/data/products";
 import { defaultImage } from "@/components/ProductList";
-import Colors from "@/constants/Colors";
+
 import { useState } from "react";
-import Button from "@/components/Button";
+
 import { useCart } from "@/app/providers/Providers";
 import { PizzaSize } from "@/types";
 import { FontAwesome } from "@expo/vector-icons";

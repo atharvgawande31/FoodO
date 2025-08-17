@@ -6,6 +6,7 @@ import * as ImagePicker from "expo-image-picker";
 import Colors from "@/constants/Colors";
 import { Stack, useLocalSearchParams } from "expo-router";
 
+
 export default function ProductForm() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
