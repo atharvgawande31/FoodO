@@ -6,47 +6,50 @@ import * as ImagePicker from "expo-image-picker";
 import Colors from "@/constants/Colors";
 import { Stack, useLocalSearchParams } from "expo-router";
 
-
 export default function ProductForm() {
+  const { id } = useLocalSearchParams();
+  const updatingItem = !!id;
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [errors, setErrors] = useState<{ name?: string; price?: string }>({});
   const [image, setImage] = useState<string | null>(null);
 
   //Input Validation
-
   const validateForm = () => {
-    if (!price) {
-      setErrors({ price: "Please enter a price" });
-      return false;
-    }
-    if (!name) {
-      setErrors({ name: "Name required" });
-      return false;
-    }
-    if (isNaN(parseFloat(price || ""))) {
-      setErrors({ price: "price must be a number" });
-      return false;
-    }
-    return true;
+    let newErrors: { name?: string; price?: string } = {};
+
+    if (!name) newErrors.name = "Name required";
+    if (!price) newErrors.price = "Please enter a price";
+    else if (isNaN(Number(price))) newErrors.price = "Price must be a number";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // ✅ true if no errors
   };
 
   //Form Submission
 
-  const { id } = useLocalSearchParams();
-  const updatingItem = !!id;
-
-  function handleForm() {
+  const isUpdate = () => {
     setErrors({});
-    if (updatingItem) {
-      Alert.alert("Update", "Product updated successfully");
-      return;
-    }
     if (!validateForm()) {
       Alert.alert("Validation failed", "Please fix the errors in the form");
       return;
     }
-    Alert.alert("Success", "Product created successfully");
+    Alert.alert("Update successful", "Product updated successfully");
+
+    return updatingItem;
+  };
+
+  function isCreate() {
+    setErrors({});
+    if (!validateForm()) {
+      Alert.alert("Validation failed", "Please fix the errors in the form");
+      return;
+    }
+    Alert.alert("Create successful", "Product created successfully");
+    setName("");
+    setPrice("");
+    setImage(null);
+
   }
 
   //Image Picker
@@ -127,7 +130,7 @@ export default function ProductForm() {
       ) : null}
 
       <Button
-        onPress={handleForm}
+        onPress={updatingItem ? isUpdate : isCreate}
         text={updatingItem ? "Update" : "Create"}
       ></Button>
       {updatingItem ? (

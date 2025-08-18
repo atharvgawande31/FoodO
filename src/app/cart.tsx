@@ -11,13 +11,18 @@ import { StatusBar } from "expo-status-bar";
 import { useCart } from "./providers/Providers";
 import CartListItem from "@/components/CartProduct";
 import Button from "@/components/Button";
+import { Stack } from "expo-router";
 
 function Cart() {
   const { items, total } = useCart();
 
+  
+
   if (items.length === 0) {
     return (
+      
       <View style={styles.container}>
+       
         <Text style={styles.empty}>Your cart is empty</Text>
       </View>
     );
@@ -25,6 +30,7 @@ function Cart() {
 
   return (
     <View style={styles.container}>
+
       <FlatList
         data={items}
         renderItem={({ item }) => <CartListItem cartItem={item} />}

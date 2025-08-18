@@ -1,8 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, StyleSheet, Alert , TouchableOpacity } from "react-native";
 import { Stack, Link, useRouter } from "expo-router";
 import Button from "@/components/Button";
 import Colors from "@/constants/Colors";
+import { FontAwesome } from "@expo/vector-icons";
+
+
+
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -42,6 +46,7 @@ export default function LoginScreen() {
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: "Login" }} />
+      <Link style={styles.adminLogin} href="/(admin)/menu/home"><Text>Login as admin</Text></Link>
       <Text style={styles.title}>Login</Text>
 
       {/* Username */}
@@ -52,7 +57,9 @@ export default function LoginScreen() {
           placeholder="Enter your email"
           value={email}
           onChangeText={setEmail}
+        
         />
+             
       </View>
 
       {/* Password */}
@@ -64,6 +71,7 @@ export default function LoginScreen() {
           secureTextEntry
           value={password}
           onChangeText={setPassword}
+          
         />
       </View>
 
@@ -96,6 +104,16 @@ const styles = StyleSheet.create({
   },
   inputWrapper: {
     marginBottom: 18,
+  },
+  adminLogin: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    marginRight: 16,
+    marginTop: 16,
+    fontSize: 16,
+    textDecorationLine: "underline",
+    color: Colors.light.tint
   },
   label: {
     fontSize: 16,

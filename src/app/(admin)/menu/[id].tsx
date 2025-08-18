@@ -17,13 +17,7 @@ export default function ProductPage() {
   const size: PizzaSize[] = ["S", "M", "L", "XL"];
   const [selectedSize, setSelectedize] = useState<PizzaSize>("L");
 
-  const addToCart = () => {
-    if (!product) {
-      return;
-    }
-    addItem(product, selectedSize);
-    router.push("/cart");
-  };
+
 
   if (!product) {
     return <Text>Product not found</Text>;

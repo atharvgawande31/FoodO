@@ -7,8 +7,8 @@ export default function MenuStack() {
   return (
     <Stack>
       
-      <Stack.Screen
-        name="index"
+        <Stack.Screen
+        name="home"
         options={{
           title: "Menu",
           headerRight: () => (
@@ -16,7 +16,7 @@ export default function MenuStack() {
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
-                    name="plus-square-o"
+                    name="square-o"
                     size={25}
                     color="black"
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
@@ -25,6 +25,7 @@ export default function MenuStack() {
               </Pressable>
             </Link>
           ),
+        
         }}
       />
 

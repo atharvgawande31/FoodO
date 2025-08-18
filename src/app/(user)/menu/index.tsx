@@ -1,8 +1,5 @@
-import { StyleSheet } from 'react-native';
-import Colors from '@/constants/Colors';
-import products from '@assets/data/products';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
+import products from '@assets/data/products';
 import {  View, FlatList } from 'react-native'
 import { ProductList } from '@/components/ProductList';
 

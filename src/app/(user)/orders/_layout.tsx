@@ -6,11 +6,10 @@ import { StatusBar } from "expo-status-bar";
 export default function MenuStack() {
   return (
     <Stack>
-      
-        <Stack.Screen
+      <Stack.Screen
         name="index"
         options={{
-          title: "Menu",
+          title: "Orders",
           headerRight: () => (
             <Link href={"/cart"} asChild>
               <Pressable>
@@ -28,7 +27,6 @@ export default function MenuStack() {
         
         }}
       />
-
     </Stack>
   );
 }
