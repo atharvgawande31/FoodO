@@ -1,8 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { useState, useEffect } from "react";
-import Button from "../components/Button";
-import { Link } from "expo-router";
 import { Redirect } from "expo-router";
 const index = () => {
   const [showWelcome, setShowWelcome] = useState(true);

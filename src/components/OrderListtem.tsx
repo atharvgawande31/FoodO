@@ -1,28 +1,38 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { Link } from "expo-router";
+import { Link, useLocalSearchParams, useSegments } from "expo-router";
+import { Order, OrderStatusList } from "@/types";
+import dayjs from "dayjs"; 
+import relativeTime from 'dayjs/plugin/relativeTime';
+import { Pressable } from "react-native";
 
-export default function OrderListItem({ order }: any) {
+
+dayjs.extend(relativeTime);
+
+
+type OrderListItemTypes = {
+     order : Order ;
+}
+
+
+export default function OrderListItem({ order }: OrderListItemTypes) {
+    const segments = useSegments()
+
   return (
+
+
+    
+    <Link href={`/${segments[0]}/orders/${order.id}` as any} asChild>
+         <Pressable>
+        
     <View style={styles.container}>
       <Text style={styles.orderId}>Order ID: {order.id}</Text>
-      <Text style={styles.orderDate}>
-        {(() => {
-          const now = new Date();
-          const created = new Date(order.created_at);
-          const diffMs = now.getTime() - created.getTime();
-          const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-          const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-          if (diffHours < 24) {
-            return `${diffHours} hour${diffHours !== 1 ? "s" : ""} ago`;
-          } else {
-            return `${diffDays} day${diffDays !== 1 ? "s" : ""} ago`;
-          }
-        })()}
-      </Text>
+          <Text style={styles.orderDate}>{dayjs(order.created_at).fromNow()}</Text>
       <Text style={styles.orderStatus}>{order.status}</Text>
     </View>
+    </Pressable>
+
+    </Link>
   );
 }
 
@@ -41,7 +51,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.055,
     shadowRadius: 8,
     elevation: 0.5,
-    borderRadius: 20,
+    borderRadius: 10,
     position: "relative",
   },
   orderId: {
