@@ -27,6 +27,7 @@ export default function MenuStack() {
         
         }}
       />
+      <Stack.Screen name="list" options={{headerShown: false}}/>
     </Stack>
   );
 }
