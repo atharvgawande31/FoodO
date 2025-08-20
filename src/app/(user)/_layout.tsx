@@ -42,7 +42,7 @@ export default function TabLayout() {
         options={{
           title: "Order",
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="history" color={color} />
+            <TabBarIcon name="list" color={color} />
           ),
         }}
       />

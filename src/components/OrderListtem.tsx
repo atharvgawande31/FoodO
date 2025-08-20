@@ -22,7 +22,7 @@ export default function OrderListItem({ order }: OrderListItemTypes) {
 
 
     
-    <Link href={`/${segments[0]}/orders/${order.id}` as any} asChild>
+    <Link href={`/${segments[0]}/history/${order.id}` as any} asChild>
          <Pressable>
         
     <View style={styles.container}>

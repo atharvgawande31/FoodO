@@ -3,7 +3,6 @@ import { Stack, useLocalSearchParams } from "expo-router";
 import { FlatList, StyleSheet } from "react-native";
 import OrderListItem from "@/components/OrderListtem";
 import orders from "@assets/data/orders";
-
 import OrderItemListItem from "@/components/OrderItemListItem";
 
 export default function OrderDatails() {
@@ -28,6 +27,8 @@ export default function OrderDatails() {
         data={order.order_items}
         renderItem={({ item }) => <OrderItemListItem item={item} />}
       />
+
+
     </View>
   );
 }

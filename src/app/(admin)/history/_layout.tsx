@@ -7,7 +7,7 @@ export default function MenuStack() {
   return (
     <Stack>
       <Stack.Screen
-        name="orders"
+        name="index"
         options={{
           title: "Orders",
           headerRight: () => (

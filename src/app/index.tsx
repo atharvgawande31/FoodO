@@ -17,7 +17,7 @@ const index = () => {
       {showWelcome ? (
         <Text style={styles.title}>Welcome to the Pizza App!</Text>
       ) : (
-        <Redirect href="/(user)/menu/" />
+        <Redirect href="/(auth)/login" />
       )}
     </View>
   );
