@@ -1,4 +1,4 @@
-import products from "@assets/data/products";
+import React from "react";
 import { CartItem, Product } from "@/types";
 import { randomUUID } from "expo-crypto";
 import { createContext, useContext, useState } from "react";

@@ -15,7 +15,7 @@ export default function LoginScreen() {
   const handleSignUp = async () => {
     setLoading(true);
 
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
 
@@ -29,7 +29,7 @@ export default function LoginScreen() {
     }
 
     Alert.alert("Cheers, Log In Successfully");
-    router.push("/(user)/menu/");
+    router.push("/");
 
   };
 
@@ -60,11 +60,12 @@ export default function LoginScreen() {
 
       <Button
         onPress={handleSignUp}
-        text={loading ? "Creating..." : "Create Account"}
+        disabled={loading}
+        text={loading ? "Logging..." : "Login"}
       />
 
-      <Link href={"/(auth)/login"} style={styles.signUp}>
-        <Text>Already have an account? Log In</Text>
+      <Link href={"/(auth)/signup"} style={styles.signUp}>
+        <Text>New here? Create Account</Text>
       </Link>
     </View>
   );

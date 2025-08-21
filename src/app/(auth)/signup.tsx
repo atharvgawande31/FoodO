@@ -69,6 +69,7 @@ export default function LoginScreen() {
 
       <Button
         onPress={handleSignUp}
+        disabled={loading}
         text={loading ? "Creating..." : "Create Account"}
       />
 
