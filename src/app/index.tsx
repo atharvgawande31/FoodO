@@ -9,6 +9,11 @@ import { supabase } from "@/lib/supabase"; // import supabase client
 const index = () => {
   const { session, loading, profile, isAdmin } = useAuth();
 
+  console.log("Session:", session);
+  console.log("Loading:", loading);
+  console.log("Profile:", profile);
+  console.log("Is Admin:", isAdmin);
+
   if (loading) {
     return <ActivityIndicator />;
   }
@@ -17,7 +22,7 @@ const index = () => {
     return <Redirect href="/(auth)/login" />;
   }
 
-  if(profile?.group !== "ADMIN") {
+  if (!isAdmin) {
     return <Redirect href="/(user)/menu" />;
   }
 

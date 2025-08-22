@@ -27,59 +27,45 @@ export default function AuthProvider({ children }: PropsWithChildren) {
   const [loading, setLoading] = useState(true); // start as true
   const [profile, setProfile] = useState<any>(null);
 
-  useEffect(() => {
-    const fetchSessionAndProfile = async () => {
-      setLoading(true);
+ useEffect(() => {
+  const fetchSessionAndProfile = async () => {
+    setLoading(true);
 
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+    const { data: { session } } = await supabase.auth.getSession();
+    setSession(session);
 
-      setSession(session);
+    if (session) {
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", session.user.id)
+        .single();
+      setProfile(data || null);
+    } else {
+      setProfile(null);
+    }
 
-      if (session) {
-        // fetch profile
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", session.user.id)
-          .single();
+    setLoading(false);
+  };
 
-        if (error) {
-          console.error("Error fetching profile:", error);
-        }
+  fetchSessionAndProfile();
 
-        setProfile(data || null);
-      } else {
-        setProfile(null);
-      }
+  const { data: subscription } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    setSession(session);
+    if (session) {
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", session.user.id)
+        .single();
+      setProfile(data || null);
+    } else {
+      setProfile(null);
+    }
+  });
 
-      setLoading(false);
-    };
-
-    fetchSessionAndProfile();
-
-    const { data: subscription } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        setSession(session);
-
-        if (session) {
-          const { data } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", session.user.id)
-            .single();
-          setProfile(data || null);
-        } else {
-          setProfile(null);
-        }
-      }
-    );
-
-    return () => {
-      subscription.subscription.unsubscribe();
-    };
-  }, []);
+  return () => subscription.subscription.unsubscribe();
+}, []);
 
   return (
     <AuthContext.Provider
@@ -94,5 +80,6 @@ export default function AuthProvider({ children }: PropsWithChildren) {
     </AuthContext.Provider>
   );
 }
+
 
 export const useAuth = () => useContext(AuthContext);
