@@ -5,7 +5,7 @@ import products from "@assets/data/products";
 import { defaultImage } from "@/components/ProductList";
 
 import { useState } from "react";
-
+import { useProduct } from "@/api/products";
 import { useCart } from "@/app/providers/Providers";
 import { PizzaSize } from "@/types";
 import { FontAwesome } from "@expo/vector-icons";
@@ -13,17 +13,22 @@ import { FontAwesome } from "@expo/vector-icons";
 export default function ProductPage() {
   const { id } = useLocalSearchParams();
   const { addItem } = useCart();
-  const product = products.find((p) => p.id.toString() === id);
   const size: PizzaSize[] = ["S", "M", "L", "XL"];
   const [selectedSize, setSelectedize] = useState<PizzaSize>("L");
 
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useProduct(parseInt(typeof id === "string" ? id : id[0]));
 
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
 
   if (!product) {
     return <Text>Product not found</Text>;
   }
-
-
 
   return (
     <View style={styles.container}>

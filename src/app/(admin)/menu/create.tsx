@@ -5,6 +5,8 @@ import { defaultImage } from "@/components/ProductList";
 import * as ImagePicker from "expo-image-picker";
 import Colors from "@/constants/Colors";
 import { Stack, useLocalSearchParams } from "expo-router";
+import {supabase} from "@/lib/supabase";
+
 
 export default function ProductForm() {
   const { id } = useLocalSearchParams();
@@ -14,9 +16,23 @@ export default function ProductForm() {
   const [errors, setErrors] = useState<{ name?: string; price?: string }>({});
   const [image, setImage] = useState<string | null>(null);
 
+
+  const createProduct = async () => {
+    const { data, error} = await supabase.from('products').insert({
+        name,
+        price: parseFloat(price),
+        image
+    })
+   if(error) {
+        Alert.alert("Error", error.message);
+    }
+  }
+
+
   //Input Validation
   const validateForm = () => {
     let newErrors: { name?: string; price?: string } = {};
+
 
     if (!name) newErrors.name = "Name required";
     if (!price) newErrors.price = "Please enter a price";
@@ -45,6 +61,7 @@ export default function ProductForm() {
       Alert.alert("Validation failed", "Please fix the errors in the form");
       return;
     }
+    createProduct()
     Alert.alert("Create successful", "Product created successfully");
     setName("");
     setPrice("");
