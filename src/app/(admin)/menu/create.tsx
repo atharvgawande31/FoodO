@@ -1,38 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, StyleSheet, Alert, Image } from "react-native";
 import Button from "@/components/Button";
 import { defaultImage } from "@/components/ProductList";
 import * as ImagePicker from "expo-image-picker";
 import Colors from "@/constants/Colors";
-import { Stack, useLocalSearchParams } from "expo-router";
-import {supabase} from "@/lib/supabase";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { useInsertProduct, useProduct, useUpdateProduct } from "@/api/products";
 
 
 export default function ProductForm() {
-  const { id } = useLocalSearchParams();
-  const updatingItem = !!id;
+  const params = useLocalSearchParams();
+const idParam = params?.id;
+const id = idParam? parseFloat(Array.isArray(idParam) ? idParam[0] : idParam) : undefined;
+
+const router = useRouter();
+const updatingItem = !!id;
+
+const { data: updatingProduct } = useProduct(id!, { enabled: !!id });
+
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [errors, setErrors] = useState<{ name?: string; price?: string }>({});
   const [image, setImage] = useState<string | null>(null);
+  const { mutate: insertProduct } = useInsertProduct();
+  const {mutate: updateProduct} = useUpdateProduct()
 
 
-  const createProduct = async () => {
-    const { data, error} = await supabase.from('products').insert({
-        name,
-        price: parseFloat(price),
-        image
-    })
-   if(error) {
-        Alert.alert("Error", error.message);
+
+  useEffect(() => {
+    if (updatingProduct) {
+      setName(updatingProduct.name);
+      setPrice(updatingProduct.price.toString());
+      setImage(updatingProduct.image);
     }
-  }
-
+  }, [updatingProduct])
 
   //Input Validation
   const validateForm = () => {
     let newErrors: { name?: string; price?: string } = {};
-
 
     if (!name) newErrors.name = "Name required";
     if (!price) newErrors.price = "Please enter a price";
@@ -50,6 +55,12 @@ export default function ProductForm() {
       Alert.alert("Validation failed", "Please fix the errors in the form");
       return;
     }
+    updateProduct({id, name, price: Number(price), image}, {
+      onSuccess: () => {
+        Alert.alert("Update successful", "Product updated successfully");
+        useRouter().push("/(admin)/menu/home");
+      }
+    });
     Alert.alert("Update successful", "Product updated successfully");
 
     return updatingItem;
@@ -61,12 +72,19 @@ export default function ProductForm() {
       Alert.alert("Validation failed", "Please fix the errors in the form");
       return;
     }
-    createProduct()
-    Alert.alert("Create successful", "Product created successfully");
-    setName("");
-    setPrice("");
-    setImage(null);
-
+    insertProduct(
+      { name, price: Number(price), image },
+      {
+        onSuccess: () => {
+          Alert.alert("Create successful", "Product created successfully");
+          setName("");
+          setPrice("");
+          setImage(null);
+          useRouter().push("/(admin)/menu/home");
+          
+        },
+      }
+    );
   }
 
   //Image Picker
