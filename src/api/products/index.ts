@@ -20,7 +20,7 @@ export const useProductList = () => {
   });
 };
 
-export const useProduct = (id: number, p0: { enabled: boolean; }) => {
+export const useProduct = (id: number, p0: { enabled: boolean }) => {
   return useQuery<Product>({
     queryKey: ["products", id],
     queryFn: async () => {
@@ -37,14 +37,12 @@ export const useProduct = (id: number, p0: { enabled: boolean; }) => {
   });
 };
 
-
-
 export const useInsertProduct = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     async mutationFn(data: any) {
-      const { error } = await supabase.from('products').insert({
+      const { error } = await supabase.from("products").insert({
         name: data.name,
         price: data.price,
         image: data.image,
@@ -55,7 +53,7 @@ export const useInsertProduct = () => {
       }
     },
     async onSuccess() {
-      await queryClient.invalidateQueries({ queryKey: ['products'] });
+      await queryClient.invalidateQueries({ queryKey: ["products"] });
     },
     onError(error) {
       console.log(error);
@@ -64,27 +62,53 @@ export const useInsertProduct = () => {
 };
 
 export const useUpdateProduct = () => {
-   const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation({
     async mutationFn(data: any) {
-      const { error } = await supabase.from('products').update({
-        name: data.name,
-        price: data.price,
-        image: data.image,
-      }) .eq("id", data.id)
-        .single();;
+      const { error } = await supabase
+        .from("products")
+        .update({
+          name: data.name,
+          price: data.price,
+          image: data.image,
+        })
+        .eq("id", data.id)
+        .single();
 
       if (error) {
         throw error;
       }
     },
     async onSuccess(_, data) {
-      await queryClient.invalidateQueries({ queryKey: ['products'] })
-      await queryClient.invalidateQueries({ queryKey: ['products', data.id] });
+      await queryClient.invalidateQueries({ queryKey: ["products"] });
+      await queryClient.invalidateQueries({ queryKey: ["products", data.id] });
     },
     onError(error) {
       console.log(error);
     },
   });
-}
+};
+
+export const useDeleteProduct = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    async mutationFn(id: number) {
+      const { error } = await supabase
+        .from("products")
+        .delete()
+        .eq("id", id)
+
+      if (error) {
+        throw error;
+      }
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
+};

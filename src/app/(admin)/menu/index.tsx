@@ -7,7 +7,7 @@ import { useProductList } from '@/api/products';
 
 export default function TabOneScreen() {
 
-    const { data, error, isLoading } = useProductList()
+    const { data : products, error, isLoading } = useProductList()
    
      if (isLoading) {
        return <Text>Loading...</Text>;
@@ -20,7 +20,7 @@ export default function TabOneScreen() {
   return (
      <View>
         <FlatList 
-            data={data}
+            data={products}
             renderItem={({item}) => <ProductList product={item}/>}
             numColumns={2}
             contentContainerStyle={{gap: 10, padding: 10}}

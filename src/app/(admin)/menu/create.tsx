@@ -5,27 +5,32 @@ import { defaultImage } from "@/components/ProductList";
 import * as ImagePicker from "expo-image-picker";
 import Colors from "@/constants/Colors";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { useInsertProduct, useProduct, useUpdateProduct } from "@/api/products";
-
+import {
+  useInsertProduct,
+  useProduct,
+  useUpdateProduct,
+  useDeleteProduct,
+} from "@/api/products";
 
 export default function ProductForm() {
   const params = useLocalSearchParams();
-const idParam = params?.id;
-const id = idParam? parseFloat(Array.isArray(idParam) ? idParam[0] : idParam) : undefined;
+  const idParam = params?.id;
+  const id = idParam
+    ? parseFloat(Array.isArray(idParam) ? idParam[0] : idParam)
+    : undefined;
 
-const router = useRouter();
-const updatingItem = !!id;
+  const router = useRouter();
+  const updatingItem = !!id;
 
-const { data: updatingProduct } = useProduct(id!, { enabled: !!id });
+  const { data: updatingProduct } = useProduct(id!, { enabled: !!id });
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [errors, setErrors] = useState<{ name?: string; price?: string }>({});
   const [image, setImage] = useState<string | null>(null);
   const { mutate: insertProduct } = useInsertProduct();
-  const {mutate: updateProduct} = useUpdateProduct()
-
-
+  const { mutate: updateProduct } = useUpdateProduct();
+  const { mutate: deleteProduct } = useDeleteProduct();
 
   useEffect(() => {
     if (updatingProduct) {
@@ -33,7 +38,7 @@ const { data: updatingProduct } = useProduct(id!, { enabled: !!id });
       setPrice(updatingProduct.price.toString());
       setImage(updatingProduct.image);
     }
-  }, [updatingProduct])
+  }, [updatingProduct]);
 
   //Input Validation
   const validateForm = () => {
@@ -55,12 +60,15 @@ const { data: updatingProduct } = useProduct(id!, { enabled: !!id });
       Alert.alert("Validation failed", "Please fix the errors in the form");
       return;
     }
-    updateProduct({id, name, price: Number(price), image}, {
-      onSuccess: () => {
-        Alert.alert("Update successful", "Product updated successfully");
-        useRouter().push("/(admin)/menu/home");
+    updateProduct(
+      { id, name, price: Number(price), image },
+      {
+        onSuccess: () => {
+          Alert.alert("Update successful", "Product updated successfully");
+          useRouter().push("/(admin)/menu/home");
+        },
       }
-    });
+    );
     Alert.alert("Update successful", "Product updated successfully");
 
     return updatingItem;
@@ -81,7 +89,6 @@ const { data: updatingProduct } = useProduct(id!, { enabled: !!id });
           setPrice("");
           setImage(null);
           useRouter().push("/(admin)/menu/home");
-          
         },
       }
     );
@@ -107,20 +114,30 @@ const { data: updatingProduct } = useProduct(id!, { enabled: !!id });
   //Delete Item
 
   function deleteItem() {
-    Alert.alert("Delete", "Are you sure you want to delete this item?", [
-      {
-        text: "Cancel",
-        style: "cancel",
+    if (typeof id !== "number") {
+      Alert.alert("Error", "Product ID is missing or invalid.");
+      return;
+    }
+    deleteProduct(id, {
+      onSuccess: () => {
+        Alert.alert("Delete", "Are you sure you want to delete this item?", [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+          {
+            text: "Delete",
+            style: "destructive",
+            onPress: () => {
+              // Handle delete logic here
+              Alert.alert("Deleted", "Product deleted successfully");
+              router.push("/(admin)/menu/home");
+            },
+
+          },
+        ]);
       },
-      {
-        text: "Delete",
-        style: "destructive",
-        onPress: () => {
-          // Handle delete logic here
-          Alert.alert("Deleted", "Product deleted successfully");
-        },
-      },
-    ]);
+    });
   }
 
   return (

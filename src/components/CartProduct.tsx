@@ -6,6 +6,9 @@ import { Link } from 'expo-router';
 import { defaultImage } from './ProductList';
 import { FontAwesome } from '@expo/vector-icons';
 import { useCart } from '@/app/providers/Providers';
+import { Tables } from '@/database.types';
+
+
 
 
 type CartListItemProps = {

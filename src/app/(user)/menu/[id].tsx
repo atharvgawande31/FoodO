@@ -7,12 +7,15 @@ import Button from "@/components/Button";
 import { useCart } from "@/app/providers/Providers";
 import { PizzaSize } from "@/types";
 import { useProduct } from "@/api/products";
+import { useDeleteProduct } from "@/api/products";
+
 
 export default function ProductPage() {
   const { id } = useLocalSearchParams();
 
   const { data: product, isLoading, error } = useProduct(
-    parseInt(typeof id === "string" ? id : id[0])
+    parseInt(typeof id === "string" ? id : id[0]),
+    { enabled: !!id }
   );
 
   const { addItem } = useCart();

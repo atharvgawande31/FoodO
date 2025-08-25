@@ -1,8 +1,10 @@
 import React from "react";
-import { CartItem, Product } from "@/types";
+import { CartItem, Tables } from "@/types";
 import { randomUUID } from "expo-crypto";
 import { createContext, useContext, useState } from "react";
 
+type Product= Tables<'products'>
+  
 // Define the type for the cart context
 type CartType = {
   items: CartItem[];

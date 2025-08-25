@@ -20,7 +20,10 @@ export default function ProductPage() {
     data: product,
     isLoading,
     error,
-  } = useProduct(parseInt(typeof id === "string" ? id : id[0]));
+  } = useProduct(
+    parseInt(typeof id === "string" ? id : id[0]),
+    { enabled: !!id }
+  );
 
   if (isLoading) {
     return <Text>Loading...</Text>;
